@@ -14,7 +14,7 @@ public class PurchaseController: UIViewController {
     
     
     var prices = [String]()
-    var products = [SKProduct]() {
+    public var products = [SKProduct]() {
         didSet {
             prices = []
             products.sort { Int($0.price) < Int($1.price) }

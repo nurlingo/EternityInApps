@@ -9,7 +9,7 @@ import Foundation
 
 public struct IAPProducts {
     
-    public static let supportProductIdentifiers: Set<ProductIdentifier> = []
+    public static var supportProductIdentifiers: Set<ProductIdentifier> = []
     
     public static let supportStore = IAPHelper(productIds: IAPProducts.supportProductIdentifiers)
     
