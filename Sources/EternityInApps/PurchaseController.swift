@@ -26,8 +26,11 @@ public class PurchaseController: UIViewController {
                     //not available for purchse
                 }
             }
-            pricePickerView.reloadAllComponents()
-            activityIndicator.stopAnimating()
+            
+            DispatchQueue.main.async {
+                pricePickerView.reloadAllComponents()
+                activityIndicator.stopAnimating()
+            }
         }
     }
     
