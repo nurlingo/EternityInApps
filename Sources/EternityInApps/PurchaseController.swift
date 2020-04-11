@@ -12,6 +12,8 @@ import StoreKit
 public class PurchaseController: UIViewController {
     
     public var productIdentifiers: [ProductIdentifier] = []
+    public var salesPitchMessage: String = "Please make a purchase"
+    public var purchaseButtonTitle: String = "Purchase"
     
     private var prices = [String]()
     private var products = [SKProduct]() {
@@ -40,17 +42,19 @@ public class PurchaseController: UIViewController {
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.hidesWhenStopped = true
+        indicator.frame = CGRect(x:  UIScreen.main.bounds.width/2 - 25, y: 200, width: 50, height: 50)
+        indicator.startAnimating()
         return indicator
     }()
     
-    private let salesPitchLabel: UILabel = {
+    private lazy var salesPitchLabel: UILabel = {
         let label = UILabel()
         label.frame = CGRect(x: 30, y: 70, width: UIScreen.main.bounds.width - 60, height: 180)
         label.font = UIFont.systemFont(ofSize: 21)
         label.textColor = UIColor.darkText
         label.textAlignment = NSTextAlignment.center
         label.numberOfLines = 0
-        label.text = NSLocalizedString("SupportMessage", comment: "")
+        label.text = salesPitchMessage
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
@@ -66,7 +70,7 @@ public class PurchaseController: UIViewController {
     }()
     
     
-    private let purchaseButton: UIButton = {
+    private lazy var purchaseButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitleColor(UIColor.darkText, for: .normal)
         button.backgroundColor = .clear
@@ -74,7 +78,7 @@ public class PurchaseController: UIViewController {
         button.layer.borderColor = UIColor.darkText.cgColor
         button.layer.cornerRadius = 5
         button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 104, width: 150, height: 44)
-        button.setTitle(NSLocalizedString("Support", comment: ""), for: UIControl.State())
+        button.setTitle(purchaseButtonTitle, for: UIControl.State())
         button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
         return button
     }()
