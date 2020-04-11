@@ -28,8 +28,8 @@ public class PurchaseController: UIViewController {
             }
             
             DispatchQueue.main.async {
-                pricePickerView.reloadAllComponents()
-                activityIndicator.stopAnimating()
+                self.pricePickerView.reloadAllComponents()
+                self.activityIndicator.stopAnimating()
             }
         }
     }
