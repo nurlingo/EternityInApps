@@ -13,7 +13,11 @@ public class PurchaseController: UIViewController {
     
     public var productIdentifiers: [ProductIdentifier] = []
     public var salesPitchMessage: String = "Please make a purchase"
+    public var thankYouMessage: String = "Thank you for your purchase!"
+    public var purchaseFailedMessage: String = "Purchase failed to complete"
     public var purchaseButtonTitle: String = "Purchase"
+    public var youGotItButtonTitle: String = "You got it"
+    public var tryAgainButtonTitle: String = "Try again"
     
     private var prices = [String]()
     private var products = [SKProduct]() {
@@ -32,6 +36,8 @@ public class PurchaseController: UIViewController {
             DispatchQueue.main.async {
                 self.pricePickerView.reloadAllComponents()
                 self.activityIndicator.stopAnimating()
+                self.purchaseButton.isHidden = false
+                self.salesPitchLabel.isHidden = false
             }
         }
     }
@@ -56,6 +62,7 @@ public class PurchaseController: UIViewController {
         label.numberOfLines = 0
         label.text = salesPitchMessage
         label.adjustsFontSizeToFitWidth = true
+        label.isHidden = true
         return label
     }()
     
@@ -80,6 +87,7 @@ public class PurchaseController: UIViewController {
         button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 104, width: 150, height: 44)
         button.setTitle(purchaseButtonTitle, for: UIControl.State())
         button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
+        button.isHidden = true
         return button
     }()
     
@@ -96,6 +104,9 @@ public class PurchaseController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(PurchaseController.handlePurchaseNotification(_:)),
                                                name: NSNotification.Name(rawValue: IAPHelper.IAPHelperPurchaseNotification),
                                                object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PurchaseController.handleFailueNotification(_:)),
+        name: NSNotification.Name(rawValue: IAPHelper.IAPHelperFailureNotification),
+        object: nil)
     }
     
     private func setupViews() {
@@ -142,8 +153,8 @@ public class PurchaseController: UIViewController {
             self.purchaseButton.alpha = 0
             self.salesPitchLabel.alpha = 0
         }) { _ in
-            self.salesPitchLabel.text = NSLocalizedString("Thanks", comment: "")
-            self.purchaseButton.setTitle(NSLocalizedString("YouGotIt", comment: ""), for: .normal)
+            self.salesPitchLabel.text = self.thankYouMessage
+            self.purchaseButton.setTitle(self.youGotItButtonTitle, for: .normal)
             UIView.animate(withDuration: 0.5, delay: 0.5, animations: {
                 self.salesPitchLabel.alpha = 1
                 self.purchaseButton.alpha = 1
@@ -151,8 +162,20 @@ public class PurchaseController: UIViewController {
         }
     }
     
-    
-    
+    @objc private func handleFailueNotification(_ notification: Notification) {
+                
+        UIView.animate(withDuration: 0.2, animations: {
+            self.purchaseButton.alpha = 0
+            self.salesPitchLabel.alpha = 0
+        }) { _ in
+            self.salesPitchLabel.text = self.purchaseFailedMessage
+            self.purchaseButton.setTitle(self.tryAgainButtonTitle, for: .normal)
+            UIView.animate(withDuration: 0.2, delay: 0.2, animations: {
+                self.salesPitchLabel.alpha = 1
+                self.purchaseButton.alpha = 1
+            })
+        }
+    }
     
     @objc private func purchaseButtonPressed(_ sender: AnyObject) {
         
