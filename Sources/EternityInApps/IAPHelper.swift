@@ -9,9 +9,9 @@
 import StoreKit
 
 public typealias ProductIdentifier = String
-public typealias ProductsRequestCompletionHandler = (_ success: Bool, _ products: [SKProduct]?) -> ()
+internal typealias ProductsRequestCompletionHandler = (_ success: Bool, _ products: [SKProduct]?) -> ()
 
-open class IAPHelper : NSObject  {
+internal class IAPHelper : NSObject  {
     
     static let IAPHelperPurchaseNotification = "IAPHelperPurchaseNotification"
     static let IAPHelperFailureNotification = "IAPHelperFailureNotification"
@@ -20,7 +20,7 @@ open class IAPHelper : NSObject  {
     fileprivate var productsRequest: SKProductsRequest?
     fileprivate var productsRequestCompletionHandler: ProductsRequestCompletionHandler?
     
-    public init(productIds: Set<ProductIdentifier>) {
+    init(productIds: Set<ProductIdentifier>) {
         productIdentifiers = productIds
         for productIdentifier in productIds {
             let purchased = UserDefaults.standard.bool(forKey: productIdentifier)
@@ -38,7 +38,7 @@ open class IAPHelper : NSObject  {
 
 extension IAPHelper {
     
-    public func requestProducts(completionHandler: @escaping ProductsRequestCompletionHandler) {
+    func requestProducts(completionHandler: @escaping ProductsRequestCompletionHandler) {
         productsRequest?.cancel()
         productsRequestCompletionHandler = completionHandler
         
@@ -47,21 +47,21 @@ extension IAPHelper {
         productsRequest!.start()
     }
     
-    public func buyProduct(_ product: SKProduct) {
+    func buyProduct(_ product: SKProduct) {
         print("Buying \(product.productIdentifier)...")
         let payment = SKPayment(product: product)
         SKPaymentQueue.default().add(payment)
     }
     
-    public func isProductPurchased(_ productIdentifier: ProductIdentifier) -> Bool {
+    func isProductPurchased(_ productIdentifier: ProductIdentifier) -> Bool {
         return purchasedProductIdentifiers.contains(productIdentifier)
     }
     
-    public class func canMakePayments() -> Bool {
+    class func canMakePayments() -> Bool {
         return SKPaymentQueue.canMakePayments()
     }
     
-    public func restorePurchases() {
+    func restorePurchases() {
         SKPaymentQueue.default().restoreCompletedTransactions()
     }
 }
@@ -70,7 +70,7 @@ extension IAPHelper {
 
 extension IAPHelper: SKProductsRequestDelegate {
     
-    public func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
+    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         let products = response.products
         //    print("Loaded list of products...")
         productsRequestCompletionHandler?(true, products)
@@ -78,14 +78,14 @@ extension IAPHelper: SKProductsRequestDelegate {
         
     }
     
-    public func request(_ request: SKRequest, didFailWithError error: Error) {
+    func request(_ request: SKRequest, didFailWithError error: Error) {
         //    print("Failed to load list of products.")
         //    print("Error: \(error.localizedDescription)")
         productsRequestCompletionHandler?(false, nil)
         clearRequestAndHandler()
     }
     
-    private func clearRequestAndHandler() {
+    func clearRequestAndHandler() {
         productsRequest = nil
         productsRequestCompletionHandler = nil
     }
@@ -95,7 +95,7 @@ extension IAPHelper: SKProductsRequestDelegate {
 
 extension IAPHelper: SKPaymentTransactionObserver {
     
-    public func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
             switch (transaction.transactionState) {
             case .purchased:

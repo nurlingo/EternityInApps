@@ -11,13 +11,13 @@ import StoreKit
 
 public class PurchaseController: UIViewController {
     
+    public var productIdentifiers: [ProductIdentifier] = []
     
-    
-    var prices = [String]()
-    public var products = [SKProduct]() {
+    private var prices = [String]()
+    private var products = [SKProduct]() {
         didSet {
             prices = []
-            products.sort { Int($0.price) < Int($1.price) }
+            products.sort { Int(truncating: $0.price) < Int(truncating: $1.price) }
             for product in products {
                 if IAPHelper.canMakePayments() {
                     PurchaseController.priceFormatter.locale = product.priceLocale
@@ -31,8 +31,8 @@ public class PurchaseController: UIViewController {
         }
     }
     
-    var purchaseMade = false
-    var productChosen: SKProduct?
+    private var purchaseMade = false
+    private var productChosen: SKProduct?
     
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
@@ -40,7 +40,7 @@ public class PurchaseController: UIViewController {
         return indicator
     }()
     
-    private let supportLabel: UILabel = {
+    private let salesPitchLabel: UILabel = {
         let label = UILabel()
         label.frame = CGRect(x: 30, y: 70, width: UIScreen.main.bounds.width - 60, height: 180)
         label.font = UIFont.systemFont(ofSize: 21)
@@ -63,7 +63,7 @@ public class PurchaseController: UIViewController {
     }()
     
     
-    private let supportButton: UIButton = {
+    private let purchaseButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitleColor(UIColor.darkText, for: .normal)
         button.backgroundColor = .clear
@@ -72,7 +72,7 @@ public class PurchaseController: UIViewController {
         button.layer.cornerRadius = 5
         button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 104, width: 150, height: 44)
         button.setTitle(NSLocalizedString("Support", comment: ""), for: UIControl.State())
-        button.addTarget(self, action: #selector(supportButtonPressed(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
         return button
     }()
     
@@ -84,6 +84,7 @@ public class PurchaseController: UIViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         
         setupViews()
+        loadPurchases()
         
         NotificationCenter.default.addObserver(self, selector: #selector(PurchaseController.handlePurchaseNotification(_:)),
                                                name: NSNotification.Name(rawValue: IAPHelper.IAPHelperPurchaseNotification),
@@ -92,10 +93,25 @@ public class PurchaseController: UIViewController {
     
     private func setupViews() {
         
-        self.view.addSubview(supportLabel)
+        self.view.addSubview(salesPitchLabel)
         self.view.addSubview(pricePickerView)
-        self.view.addSubview(supportButton)
+        self.view.addSubview(purchaseButton)
+        self.view.addSubview(activityIndicator)
         
+    }
+    
+    private func loadPurchases() {
+        activityIndicator.startAnimating()
+        
+        IAPProducts.purchaseProductIdentifiers = Set(productIdentifiers)
+        IAPProducts.purchaseStore.requestProducts{success, productArray in
+                        
+            if success {
+                self.products = productArray!
+            } else {
+                self.activityIndicator.stopAnimating()
+            }
+        }
     }
     
     override public func viewSafeAreaInsetsDidChange() {
@@ -105,7 +121,7 @@ public class PurchaseController: UIViewController {
             
             let safeArea = self.view.safeAreaInsets
             
-            self.supportButton.frame.origin.y = UIScreen.main.bounds.height - 104 - safeArea.bottom
+            self.purchaseButton.frame.origin.y = UIScreen.main.bounds.height - 104 - safeArea.bottom
             
         }
     }
@@ -116,14 +132,14 @@ public class PurchaseController: UIViewController {
         
         UIView.animate(withDuration: 0.5, animations: {
             self.pricePickerView.alpha = 0
-            self.supportButton.alpha = 0
-            self.supportLabel.alpha = 0
+            self.purchaseButton.alpha = 0
+            self.salesPitchLabel.alpha = 0
         }) { _ in
-            self.supportLabel.text = NSLocalizedString("Thanks", comment: "")
-            self.supportButton.setTitle(NSLocalizedString("YouGotIt", comment: ""), for: .normal)
+            self.salesPitchLabel.text = NSLocalizedString("Thanks", comment: "")
+            self.purchaseButton.setTitle(NSLocalizedString("YouGotIt", comment: ""), for: .normal)
             UIView.animate(withDuration: 0.5, delay: 0.5, animations: {
-                self.supportLabel.alpha = 1
-                self.supportButton.alpha = 1
+                self.salesPitchLabel.alpha = 1
+                self.purchaseButton.alpha = 1
             })
         }
     }
@@ -131,7 +147,7 @@ public class PurchaseController: UIViewController {
     
     
     
-    @objc private func supportButtonPressed(_ sender: AnyObject) {
+    @objc private func purchaseButtonPressed(_ sender: AnyObject) {
         
         if purchaseMade {
             self.dismiss(animated: true, completion: nil)
@@ -146,9 +162,9 @@ public class PurchaseController: UIViewController {
             return
         }
         
-        /// Analytics.logEvent("attempting_to_support", parameters: nil)
+        /// Analytics.logEvent("attempting_to_purchase", parameters: nil)
         /// Analytics.logEvent("attempting_to_buy_for_\(PurchaseController.priceFormatter.string(from: product.price)!)", parameters: nil)
-        IAPProducts.supportStore.buyProduct(product)
+        IAPProducts.purchaseStore.buyProduct(product)
     }
     
     @IBAction private func closeButtonPressed(_ sender: Any) {

@@ -6,7 +6,7 @@ final class EternityInAppsTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssert(IAPProducts.supportProductIdentifiers.isEmpty)
+        XCTAssert(IAPProducts.purchaseProductIdentifiers.isEmpty)
     }
 
     static var allTests = [

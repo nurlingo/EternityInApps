@@ -7,11 +7,11 @@
 
 import Foundation
 
-public struct IAPProducts {
+internal struct IAPProducts {
     
-    public static var supportProductIdentifiers: Set<ProductIdentifier> = []
+    static var purchaseProductIdentifiers: Set<ProductIdentifier> = []
     
-    public static let supportStore = IAPHelper(productIds: IAPProducts.supportProductIdentifiers)
+    static let purchaseStore = IAPHelper(productIds: IAPProducts.purchaseProductIdentifiers)
     
     
 }
