@@ -84,7 +84,7 @@ public class PurchaseController: UIViewController {
         button.layer.borderWidth = 3
         button.layer.borderColor = UIColor.darkText.cgColor
         button.layer.cornerRadius = 5
-        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 124, width: 150, height: 44)
+        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 104, width: 150, height: 44)
         button.setTitle(purchaseButtonTitle, for: UIControl.State())
         button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
         button.isHidden = true
@@ -139,7 +139,7 @@ public class PurchaseController: UIViewController {
             
             let safeArea = self.view.safeAreaInsets
             
-            self.purchaseButton.frame.origin.y = UIScreen.main.bounds.height - 104 - safeArea.bottom
+            self.purchaseButton.frame.origin.y = UIScreen.main.bounds.height - 124 - safeArea.bottom
             
         }
     }
