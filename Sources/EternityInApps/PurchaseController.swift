@@ -146,6 +146,7 @@ public class PurchaseController: UIViewController {
 
     @objc private func handlePurchaseNotification(_ notification: Notification) {
         
+        self.activityIndicator.stopAnimating()
         purchaseMade = true
         
         UIView.animate(withDuration: 0.5, animations: {
@@ -164,6 +165,7 @@ public class PurchaseController: UIViewController {
     
     @objc private func handleFailueNotification(_ notification: Notification) {
                 
+        self.activityIndicator.stopAnimating()
         UIView.animate(withDuration: 0.2, animations: {
             self.purchaseButton.alpha = 0
             self.salesPitchLabel.alpha = 0
