@@ -98,6 +98,8 @@ public class PurchaseController: UIViewController {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeButtonPressed(_:)))
+        
         setupViews()
         loadPurchases()
         
@@ -199,7 +201,7 @@ public class PurchaseController: UIViewController {
         IAPProducts.purchaseStore.buyProduct(product)
     }
     
-    @IBAction private func closeButtonPressed(_ sender: Any) {
+    @objc private func closeButtonPressed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     
