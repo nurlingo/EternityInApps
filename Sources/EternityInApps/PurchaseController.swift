@@ -19,6 +19,14 @@ public class PurchaseController: UIViewController {
     public var youGotItButtonTitle: String = "You got it"
     public var tryAgainButtonTitle: String = "Try again"
     
+    public lazy var proceedAction: () -> Void = {
+      self.dismiss(animated: true, completion: nil)
+    }
+    
+    public lazy var closeAction: () -> Void = {
+      self.dismiss(animated: true, completion: nil)
+    }
+    
     private var prices = [String]()
     private var products = [SKProduct]() {
         didSet {
@@ -186,7 +194,7 @@ public class PurchaseController: UIViewController {
     @objc private func purchaseButtonPressed(_ sender: AnyObject) {
         
         if purchaseMade {
-            self.dismiss(animated: true, completion: nil)
+            proceedAction()
             return
         }
         
@@ -194,7 +202,7 @@ public class PurchaseController: UIViewController {
         
         guard let product = productChosen else {
             activityIndicator.stopAnimating()
-            self.dismiss(animated: true, completion: nil)
+            proceedAction()
             return
         }
         
@@ -204,7 +212,7 @@ public class PurchaseController: UIViewController {
     }
     
     @objc private func closeButtonPressed(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        closeAction()
     }
     
     private static let priceFormatter: NumberFormatter = {
