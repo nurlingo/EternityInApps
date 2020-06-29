@@ -19,6 +19,9 @@ public class PurchaseController: UIViewController {
     public var youGotItButtonTitle: String = "You got it"
     public var tryAgainButtonTitle: String = "Try again"
     
+    public var freePrice: String = "FreePrice"
+    public var canGetForFree: Bool = false
+    
     public lazy var proceedAction: () -> Void = {
       self.dismiss(animated: true, completion: nil)
     }
@@ -30,7 +33,8 @@ public class PurchaseController: UIViewController {
     private var prices = [String]()
     private var products = [SKProduct]() {
         didSet {
-            prices = []
+            prices = canGetForFree ? [freePrice] : []
+            
             products.sort { Int(truncating: $0.price) < Int(truncating: $1.price) }
             for product in products {
                 if IAPHelper.canMakePayments() {
@@ -40,6 +44,8 @@ public class PurchaseController: UIViewController {
                     //not available for purchse
                 }
             }
+            
+            productChosen = canGetForFree ? nil : products.first
             
             DispatchQueue.main.async {
                 self.pricePickerView.reloadAllComponents()
