@@ -265,7 +265,16 @@ extension PurchaseController: UIPickerViewDelegate, UIPickerViewDataSource  {
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        productChosen = products[row]
+        guard canGetForFree else {
+            productChosen = products[row]
+            return
+        }
+        
+        if row > 0 {
+            productChosen = products[row-1]
+        } else {
+            productChosen = nil
+        }
         
     }
     
