@@ -130,10 +130,12 @@ extension IAPHelper: SKPaymentTransactionObserver {
     }
     
     private func fail(transaction: SKPaymentTransaction) {
-        guard let productIdentifier = transaction.original?.payment.productIdentifier else { return }
         
         deliverFailureNotificationFor(identifier: productIdentifier)
         print("fail...")
+        
+        guard let productIdentifier = transaction.original?.payment.productIdentifier else { return }
+       
         if let transactionError = transaction.error {
             print("Transaction Error: \(transactionError)")
         }
