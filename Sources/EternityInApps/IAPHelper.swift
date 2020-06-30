@@ -131,6 +131,7 @@ extension IAPHelper: SKPaymentTransactionObserver {
     
     private func fail(transaction: SKPaymentTransaction) {
         guard let productIdentifier = transaction.original?.payment.productIdentifier else {
+            /// most likely purchase got canceled by user
             deliverFailureNotificationFor(identifier: "none")
             return
         }

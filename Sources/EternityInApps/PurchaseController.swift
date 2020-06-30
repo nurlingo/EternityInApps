@@ -184,6 +184,12 @@ public class PurchaseController: UIViewController {
     @objc private func handleFailueNotification(_ notification: Notification) {
                 
         self.activityIndicator.stopAnimating()
+        
+        if let identified = notification.object, identified == "none" {
+            /// purchase got canceled by user
+            return
+        }
+        
         UIView.animate(withDuration: 0.2, animations: {
             self.purchaseButton.alpha = 0
             self.salesPitchLabel.alpha = 0
