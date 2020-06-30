@@ -94,7 +94,7 @@ public class PurchaseController: UIViewController {
         let button = UIButton(type: .custom)
         button.setTitleColor(UIColor.darkText, for: .normal)
         button.backgroundColor = .clear
-        button.frame = CGRect(x: 21, y: 45, width: 33, height: 33)
+        button.frame = CGRect(x: 16, y: 40, width: 33, height: 33)
         button.setTitle("×", for: UIControl.State())
         button.titleLabel?.font = UIFont.systemFont(ofSize: 35)
         button.addTarget(self, action: #selector(closeButtonPressed(_:)), for: .touchUpInside)
