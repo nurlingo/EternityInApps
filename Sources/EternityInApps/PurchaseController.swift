@@ -94,7 +94,7 @@ public class PurchaseController: UIViewController {
         let button = UIButton(type: .custom)
         button.setTitleColor(UIColor.darkText, for: .normal)
         button.backgroundColor = .clear
-        button.frame = CGRect(x: 16, y: 40, width: 33, height: 33)
+        button.frame = CGRect(x: 16, y: 20, width: 33, height: 33)
         button.setTitle("×", for: UIControl.State())
         button.titleLabel?.font = UIFont.systemFont(ofSize: 35)
         button.addTarget(self, action: #selector(closeButtonPressed(_:)), for: .touchUpInside)
@@ -167,6 +167,7 @@ public class PurchaseController: UIViewController {
             
             let safeArea = self.view.safeAreaInsets
             
+            self.closeButton.frame.origin.y = safeArea.top + 20
             self.purchaseButton.frame.origin.y = UIScreen.main.bounds.height - 124 - safeArea.bottom
             
         }
