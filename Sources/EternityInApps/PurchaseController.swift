@@ -185,7 +185,7 @@ public class PurchaseController: UIViewController {
                 
         self.activityIndicator.stopAnimating()
         
-        if let identified = notification.object, identified == "none" {
+        if let identified = notification.object as? String, identified == "none" {
             /// purchase got canceled by user
             return
         }
