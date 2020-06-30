@@ -94,7 +94,7 @@ public class PurchaseController: UIViewController {
         let button = UIButton(type: .custom)
         button.setTitleColor(UIColor.darkText, for: .normal)
         button.backgroundColor = .clear
-        button.frame = CGRect(x: 20, y: 40, width: 33, height: 33)
+        button.frame = CGRect(x: 21, y: 40, width: 33, height: 33)
         button.setTitle("×", for: UIControl.State())
         button.titleLabel?.font = UIFont.systemFont(ofSize: 35)
         button.addTarget(self, action: #selector(closeButtonPressed(_:)), for: .touchUpInside)
@@ -119,6 +119,7 @@ public class PurchaseController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
                 
+        self.view.backgroundColor = UIColor(red: 254/255, green: 254/255, blue: 225/255, alpha: 1.0)
         setupViews()
         loadPurchases()
         
