@@ -135,9 +135,14 @@ public class PurchaseController: UIViewController {
         
         self.view.addSubview(salesPitchLabel)
         self.view.addSubview(pricePickerView)
-        self.view.addSubview(closeButton)
         self.view.addSubview(purchaseButton)
         self.view.addSubview(activityIndicator)
+        
+        if self.navigationController?.isNavigationBarHidden ?? true {
+            self.view.addSubview(closeButton)
+        } else {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(closeButtonPressed(_:)))
+        }
         
     }
     
