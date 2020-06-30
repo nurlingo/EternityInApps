@@ -90,6 +90,17 @@ public class PurchaseController: UIViewController {
         return picker
     }()
     
+    private var closeButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitleColor(UIColor.darkText, for: .normal)
+        button.backgroundColor = .clear
+        button.frame = CGRect(x: 20, y: 40, width: 33, height: 33)
+        button.setTitle("×", for: UIControl.State())
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 35)
+        button.addTarget(self, action: #selector(closeButtonPressed(_:)), for: .touchUpInside)
+        return button
+    }()
+    
     
     private lazy var purchaseButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -107,15 +118,7 @@ public class PurchaseController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.view.backgroundColor = UIColor(red: 254/255, green: 254/255, blue: 225/255, alpha: 1.0)
-        
-        //hiding nav bar bottom border
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(closeButtonPressed(_:)))
-        
+                
         setupViews()
         loadPurchases()
         
@@ -131,6 +134,7 @@ public class PurchaseController: UIViewController {
         
         self.view.addSubview(salesPitchLabel)
         self.view.addSubview(pricePickerView)
+        self.view.addSubview(closeButton)
         self.view.addSubview(purchaseButton)
         self.view.addSubview(activityIndicator)
         
