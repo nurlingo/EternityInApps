@@ -167,7 +167,7 @@ public class PurchaseController: UIViewController {
             
             let safeArea = self.view.safeAreaInsets
             
-            self.closeButton.frame.origin.y = safeArea.top + 20
+            self.closeButton.frame.origin.y = safeArea.top + 5
             self.purchaseButton.frame.origin.y = UIScreen.main.bounds.height - 124 - safeArea.bottom
             
         }
