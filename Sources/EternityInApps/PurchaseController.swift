@@ -12,7 +12,7 @@ import StoreKit
 public class PurchaseController: UIViewController {
     
     public var productIdentifiers: [ProductIdentifier] = []
-    public var salesPitchMessage: String = "Please make a purchase"
+    public var salesPitchMessage: String = "Choose your own price"
     public var thankYouMessage: String = "Thank you for your purchase!"
     public var purchaseFailedMessage: String = "Purchase failed to complete"
     public var purchaseButtonTitle: String = "Purchase"
@@ -23,10 +23,6 @@ public class PurchaseController: UIViewController {
     public var canGetForFree: Bool = false
     
     public lazy var proceedAction: () -> Void = {
-      self.dismiss(animated: true, completion: nil)
-    }
-    
-    public lazy var closeAction: () -> Void = {
       self.dismiss(animated: true, completion: nil)
     }
     
@@ -90,18 +86,6 @@ public class PurchaseController: UIViewController {
         return picker
     }()
     
-    private var closeButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setTitleColor(UIColor.darkText, for: .normal)
-        button.backgroundColor = .clear
-        button.frame = CGRect(x: 16, y: 20, width: 33, height: 33)
-        button.setTitle("×", for: UIControl.State())
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 35)
-        button.addTarget(self, action: #selector(closeButtonPressed(_:)), for: .touchUpInside)
-        return button
-    }()
-    
-    
     private lazy var purchaseButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitleColor(UIColor.darkText, for: .normal)
@@ -119,6 +103,7 @@ public class PurchaseController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
                 
+        self.title = "Make a purchase"
         self.view.backgroundColor = UIColor(red: 254/255, green: 254/255, blue: 225/255, alpha: 1.0)
         setupViews()
         loadPurchases()
@@ -137,12 +122,6 @@ public class PurchaseController: UIViewController {
         self.view.addSubview(pricePickerView)
         self.view.addSubview(purchaseButton)
         self.view.addSubview(activityIndicator)
-        
-        if self.navigationController?.isNavigationBarHidden ?? true {
-            self.view.addSubview(closeButton)
-        } else {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(closeButtonPressed(_:)))
-        }
         
     }
     
@@ -167,7 +146,6 @@ public class PurchaseController: UIViewController {
             
             let safeArea = self.view.safeAreaInsets
             
-            self.closeButton.frame.origin.y = safeArea.top + 5
             self.purchaseButton.frame.origin.y = UIScreen.main.bounds.height - 124 - safeArea.bottom
             
         }
@@ -237,10 +215,6 @@ public class PurchaseController: UIViewController {
         /// Analytics.logEvent("attempting_to_purchase", parameters: nil)
         /// Analytics.logEvent("attempting_to_buy_for_\(PurchaseController.priceFormatter.string(from: product.price)!)", parameters: nil)
         IAPProducts.purchaseStore.buyProduct(product)
-    }
-    
-    @objc private func closeButtonPressed(_ sender: Any) {
-        closeAction()
     }
     
     private static let priceFormatter: NumberFormatter = {
