@@ -134,7 +134,9 @@ public class PurchaseController: UIViewController {
             if success {
                 self.products = productArray!
             } else {
-                self.activityIndicator.stopAnimating()
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                }
             }
         }
     }
